@@ -1,0 +1,31 @@
+body{
+  font-family: 'Roboto', sans-serif;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+code{
+  font-size: 85%;
+} 
+
+p{
+  margin-bottom: 16px;
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+ul{
+  padding: 0;
+  margin: 0;
+}
+
+li{
+  list-style: none;
+  line-height: 1.5;
+}
+
+a{
+  color: #e56a2f;
+}
