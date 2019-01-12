@@ -1,6 +1,6 @@
 {
   "name": "module-docs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "browse the README files of dependencies in your application's node_modules directory using your browser",
   "main": "src/index.js",
   "bin": {
@@ -17,7 +17,7 @@
     "lint": "eslint ./src"
   },
   "author": "Ramsay Lanier <ramsaylanier@gmail.com>",
-  "repository": "",
+  "repository": "https://github.com/ramsaylanier/module-docs",
   "keywords": [
     "documentation",
     "docs",
