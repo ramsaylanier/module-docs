@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/styles"
-import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 import { withRouter, Link } from "react-router-dom"
 import { getModules, getReadme } from "./util.js"
@@ -13,12 +12,6 @@ import Markdown from "react-markdown"
 
 const dark = "#380436"
 const accent = "#a4f87f"
-
-const wrapper = css`
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-`
 
 const useStyles = makeStyles({
   container: {
@@ -60,6 +53,11 @@ const useStyles = makeStyles({
   },
   suggestionHighlighted: {
     color: "white"
+  },
+  wrapper: {
+    maxWidth: 800,
+    marginLeft: "auto",
+    marginRight: "auto"
   }
 })
 
@@ -217,7 +215,6 @@ const App = props => {
             getSuggestionValue={getSuggestionValue}
             renderSuggestion={renderSuggestion}
             inputProps={inputProps}
-            // highlightFirstSuggestion={true}
           />
         </Wrapper>
       </Header>
@@ -229,10 +226,7 @@ const App = props => {
               <ul>
                 {favorites.map(f => (
                   <li key={f}>
-                    <Link
-                      key={f}
-                      to={{ pathname: "/", search: `?search=${f}` }}
-                    >
+                    <Link to={{ pathname: "/", search: `?search=${f}` }}>
                       {f}
                     </Link>
                   </li>
@@ -243,7 +237,7 @@ const App = props => {
         </Sidebar>
         <Main>
           {module && (
-            <div css={wrapper}>
+            <div className={classes.wrapper}>
               <Markdown source={readme} />
             </div>
           )}
