@@ -1,23 +1,31 @@
 {
   "name": "module-docs",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "browse the README files of dependencies in your application's node_modules directory using your browser",
   "main": "index.js",
   "bin": {
     "module-docs": "./bin/index.js"
   },
   "scripts": {
-    "build:cli": "babel ./src --out-dir ./lib --copy-files",
-    "build:cli:watch": "nodemon --watch ./src --exec npm run build:cli",
-    "build": "webpack --mode production",
+    "build": "babel ./src --out-dir ./lib --copy-files",
+    "build:watch": "nodemon --watch ./src --exec npm run build",
+    "prepublish": "npm run build",
     "start": "npm run build && node ./server.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon ./server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "lint": "eslint ./src"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Ramsay Lanier <ramsaylanier@gmail.com>",
+  "repository": "",
+  "keywords": [
+    "documentation",
+    "docs",
+    "package",
+    "utility",
+    "cli"
+  ],
+  "license": "MIT",
   "dependencies": {
     "@emotion/core": "^10.0.6",
     "@emotion/styled": "^10.0.6",
