@@ -14,7 +14,9 @@ const useStyles = makeStyles({
     display: "flex"
   },
   wrapper: {
-    flex: 1
+    flex: 1,
+    height: "100%",
+    overflow: "auto"
   },
   source: {
     maxWidth: 800,
@@ -44,6 +46,13 @@ const Main = ({ readme }) => {
   useEffect(() => {
     Prism.highlightAll()
   })
+
+  useEffect(
+    () => {
+      setSource(readme.root.readme.content)
+    },
+    [readme]
+  )
 
   const handleClick = readme => {
     setSource(readme.content)

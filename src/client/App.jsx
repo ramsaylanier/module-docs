@@ -154,7 +154,6 @@ const App = props => {
   const loadReadme = async () => {
     try {
       const readme = await getReadme(module)
-      console.log(readme)
       setReadme(readme)
     } catch (err) {
       console.log(err)
