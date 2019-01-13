@@ -1,10 +1,11 @@
 const program = require("commander")
-const makeServer = require("./server")
+const makeServer = require("./server/serve")
 const path = require("path")
 
 const getConfig = () => {
   const configPath = path.join(process.cwd(), "./module-docs.config.js")
   const config = require(configPath)
+  if (!config) return null
   return config
 }
 
