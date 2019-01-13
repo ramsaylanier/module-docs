@@ -10,10 +10,6 @@
     "build": "babel ./src --out-dir ./lib --copy-files",
     "build:watch": "nodemon --watch ./src --exec npm run build",
     "prepublish": "npm run build",
-    "start": "npm run build && node ./server.js",
-    "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "server": "nodemon ./server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "lint": "eslint ./src"
   },
   "author": "Ramsay Lanier <ramsaylanier@gmail.com>",

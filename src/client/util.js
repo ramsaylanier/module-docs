@@ -16,7 +16,7 @@ export const getReadme = async module => {
       method: "POST"
     })
     const data = await response.json()
-    return data
+    return data.readme
   } catch (err) {
     console.log(err)
   }

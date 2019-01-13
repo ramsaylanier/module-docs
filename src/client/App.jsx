@@ -5,10 +5,9 @@ import styled from "@emotion/styled"
 import { withRouter, Link } from "react-router-dom"
 import { getModules, getReadme } from "./util.js"
 import qs from "query-string"
-import Prism from "prismjs"
 
 import Autosuggest from "react-autosuggest"
-import Markdown from "react-markdown"
+import Main from "./Main"
 
 const dark = "#380436"
 const accent = "#a4f87f"
@@ -71,7 +70,8 @@ const Header = styled("header")({
   position: "fixed",
   left: 0,
   top: 0,
-  width: "100%"
+  width: "100%",
+  height: "4rem"
 })
 
 const Wrapper = styled("div")({
@@ -97,13 +97,6 @@ const Sidebar = styled("div")({
   }
 })
 
-const Main = styled("div")({
-  flex: 1,
-  height: "100%",
-  paddingTop: "5rem",
-  overflow: "auto"
-})
-
 const App = props => {
   const [val, setVal] = useState("")
   const [suggestions, setSuggestions] = useState([])
@@ -113,36 +106,19 @@ const App = props => {
   const [favorites, setFavorites] = useState([])
   const classes = useStyles()
 
-  const loadModules = async () => {
-    const { files: modules, config } = await getModules()
-    setFavorites(config.favorites)
-    setModules(modules)
-    loadReadme()
-  }
-
-  const loadReadme = () => {
-    if (modules.length === 0) return
-    const result = modules.find(m => m === val)
-
-    if (result) {
-      setModule(result)
-    }
-  }
-
   useEffect(() => {
     loadModules()
   }, [])
 
   useEffect(
     () => {
-      loadReadme()
+      const result = modules.find(m => m === val)
+      if (result) {
+        setModule(result)
+      }
     },
     [modules, val]
   )
-
-  useEffect(() => {
-    Prism.highlightAll()
-  })
 
   // set input val on mount if there is search query param
   useEffect(
@@ -155,18 +131,35 @@ const App = props => {
 
   useEffect(
     () => {
-      if (module) {
-        try {
-          getReadme(module).then(({ readme }) => {
-            setReadme(readme)
-          })
-        } catch (err) {
-          console.log(err)
-        }
-      }
+      module && loadReadme()
     },
     [module]
   )
+
+  const loadModules = async () => {
+    const { files: modules, config } = await getModules()
+    setFavorites(config.favorites)
+    setModules(modules)
+    loadModule()
+  }
+
+  const loadModule = () => {
+    if (modules.length === 0) return
+    const result = modules.find(m => m === val)
+    if (result) {
+      setModule(result)
+    }
+  }
+
+  const loadReadme = async () => {
+    try {
+      const readme = await getReadme(module)
+      console.log(readme)
+      setReadme(readme)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleChange = (e, { newValue }) => {
     props.history.push({ pathname: "/", search: `search=${newValue}` })
@@ -235,13 +228,7 @@ const App = props => {
             </nav>
           )}
         </Sidebar>
-        <Main>
-          {module && (
-            <div className={classes.wrapper}>
-              <Markdown source={readme} />
-            </div>
-          )}
-        </Main>
+        {readme && <Main readme={readme} />}
       </Body>
     </div>
   )

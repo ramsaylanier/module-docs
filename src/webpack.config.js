@@ -1,4 +1,3 @@
-const webpack = require("webpack")
 const paths = require("./paths")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 
@@ -7,6 +6,7 @@ module.exports = {
   entry: {
     app: [paths.entryPath]
   },
+  stats: "none",
   output: {
     chunkFilename: "[name].bundle.js",
     filename: "[name].bundle.js"
@@ -31,15 +31,7 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"]
   },
-  devServer: {
-    port: 4445,
-    open: true,
-    proxy: {
-      "/": "http://localhost:4444"
-    }
-  },
   plugins: [
-    new webpack.ProgressPlugin(),
     new HtmlWebpackPlugin({
       template: paths.templatePath
     })
