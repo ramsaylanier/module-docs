@@ -4,6 +4,14 @@ import { makeStyles } from "@material-ui/styles"
 import Prism from "prismjs"
 
 import Markdown from "react-markdown"
+import htmlParser from "react-markdown/plugins/html-parser"
+
+const parseHtml = htmlParser({
+  isValidNode: node => node.type !== "script",
+  processingInstructions: [
+    /* ... */
+  ]
+})
 
 const useStyles = makeStyles({
   root: {
@@ -125,7 +133,7 @@ const Main = ({ pkg }) => {
               </ul>
             </div>
           )}
-          {source && <Markdown source={source} />}
+          {source && <Markdown source={source} escapeHtml={false} />}
         </div>
       </div>
     </div>
