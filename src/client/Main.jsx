@@ -18,9 +18,29 @@ const useStyles = makeStyles({
     height: "100%",
     overflow: "auto"
   },
+  info: {
+    margin: "1rem 0",
+    "& ul": {
+      listStyle: "none",
+      padding: 0,
+      margin: 0,
+      display: "flex",
+      alignItem: "center"
+    },
+    "& li": {
+      marginRight: "1rem",
+      color: "#93158e"
+    },
+    "& a": {
+      background: "#93158e",
+      padding: ".5rem",
+      color: "white",
+      borderRadius: 3
+    }
+  },
   source: {
     maxWidth: 800,
-    padding: "1rem",
+    padding: "0rem 1rem",
     margin: "0 auto"
   },
   sidebar: {
@@ -28,7 +48,11 @@ const useStyles = makeStyles({
     color: "white",
     height: "100%",
     overflow: "auto",
-    padding: "1rem"
+    padding: "1rem",
+    "& ul": {
+      padding: 0,
+      margin: 0
+    }
   },
   child: {
     padding: ".5rem 0",
@@ -39,8 +63,10 @@ const useStyles = makeStyles({
   }
 })
 
-const Main = ({ readme }) => {
-  const [source, setSource] = useState(readme.root.readme.content)
+const Main = ({ pkg }) => {
+  console.log(pkg)
+  const [source, setSource] = useState(pkg.content)
+  const [info, setInfo] = useState(JSON.parse(pkg.info))
   const classes = useStyles()
 
   useEffect(() => {
@@ -49,33 +75,54 @@ const Main = ({ readme }) => {
 
   useEffect(
     () => {
-      setSource(readme.root.readme.content)
+      setSource(pkg.content)
+      setInfo(JSON.parse(pkg.info))
     },
-    [readme]
+    [pkg]
   )
 
-  const handleClick = readme => {
-    setSource(readme.content)
+  const handleClick = child => {
+    setSource(child.content)
+    setInfo(JSON.parse(child.info))
   }
 
   return (
     <div className={classes.root}>
       <div className={classes.sidebar}>
         <ul>
-          {readme.root.children.map(child =>
-            child.readme ? (
-              <li
-                className={classes.child}
-                onClick={() => handleClick(child.readme)}
-              >
-                {child.readme.name}
-              </li>
-            ) : null
+          {pkg.children.map(
+            child =>
+              child.name && (
+                <li
+                  key={child.name}
+                  className={classes.child}
+                  onClick={() => handleClick(child)}
+                >
+                  {child.name}
+                </li>
+              )
           )}
         </ul>
       </div>
       <div className={classes.wrapper}>
         <div className={classes.source}>
+          {info && (
+            <div className={classes.info}>
+              <ul>
+                {info.homepage && (
+                  <li>
+                    <a href={info.homepage}>Homepage</a>
+                  </li>
+                )}
+
+                {info.version && (
+                  <li>
+                    version: <strong>{info.version}</strong>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
           <Markdown source={source} />
         </div>
       </div>
@@ -84,7 +131,7 @@ const Main = ({ readme }) => {
 }
 
 Main.propTypes = {
-  readme: PropTypes.object.isRequired
+  pkg: PropTypes.object.isRequired
 }
 
 export default Main

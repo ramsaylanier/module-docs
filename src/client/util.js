@@ -10,13 +10,13 @@ export const getModules = async () => {
   }
 }
 
-export const getReadme = async module => {
+export const getPackage = async module => {
   try {
     const response = await fetch(`http://localhost:4444/module/${module}`, {
       method: "POST"
     })
-    const data = await response.json()
-    return data.readme
+    const { pkg } = await response.json()
+    return pkg
   } catch (err) {
     console.log(err)
   }

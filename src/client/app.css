@@ -8,6 +8,11 @@ body{
 
 code{
   font-size: 85%;
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  padding: .2em .4em;
 } 
 
 p{
@@ -16,16 +21,14 @@ p{
   line-height: 1.5;
 }
 
-ul{
-  padding: 0;
-  margin: 0;
-}
-
 li{
-  list-style: none;
   line-height: 1.5;
 }
 
 a{
   color: #e56a2f;
+}
+
+img{
+  max-width: 100%;
 }
