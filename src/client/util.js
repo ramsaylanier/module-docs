@@ -1,3 +1,5 @@
+import { get, set } from "idb-keyval"
+
 export const getModules = async () => {
   try {
     const response = await fetch("http://localhost:4444/modules", {
@@ -20,4 +22,27 @@ export const getPackage = async module => {
   } catch (err) {
     console.log(err)
   }
+}
+
+const getFavs = () => get("favorites") || new Set([])
+
+export const addToFavorites = async module => {
+  const favs = await getFavs()
+  favs.add(module)
+  set("favorites", favs)
+  return favs
+}
+
+export const removeFromFavorites = async module => {
+  const favs = await getFavs()
+  favs.delete(module)
+  set("favorites", favs)
+  return favs
+}
+
+export const loadFavoritesIntoMemory = async favorites => {
+  const favs = await getFavs()
+  favorites.forEach(fav => favs.add(fav))
+  set("favorites", favs)
+  return favs
 }
