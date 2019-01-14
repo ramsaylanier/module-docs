@@ -5,6 +5,34 @@ const promisify = require("util").promisify
 const readdir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
 
+const checkFilesForFile = files => fileName =>
+  some(files, f => f.name === fileName)
+const getDirectories = files =>
+  files.filter(f => f.isDirectory() && f.name !== "node_modules")
+const checkPackage = files => {
+  const checkFilesFor = checkFilesForFile(files)
+  return {
+    hasReadme: checkFilesFor("README.md"),
+    hasPackageInfo: checkFilesFor("package.json")
+  }
+}
+
+const getDirectoryContent = async directory => {
+  const files = await readdir(directory, { withFileTypes: true })
+  const { hasReadme, hasPackageInfo } = checkPackage(files)
+  const readmeContent =
+    hasReadme && (await readFile(`${directory}/README.md`, "utf8"))
+
+  const packageInfo =
+    hasPackageInfo && (await readFile(`${directory}/package.json`, "utf8"))
+
+  return {
+    files,
+    readmeContent,
+    packageInfo
+  }
+}
+
 exports.getFiles = (path, config) => async (req, res) => {
   const files = await readdir(path)
   res.send({ files, config })
@@ -14,28 +42,11 @@ exports.getPackage = path => async (req, res) => {
   const name = req.params.name
   const dir = `${path}/${name}`
 
-  const checkForReadme = files => some(files, file => file.name === "README.md")
-  const checkForPackageInfo = files =>
-    some(files, file => file.name === "package.json")
-
-  const getDirectories = files =>
-    files.filter(f => f.isDirectory() && f.name !== "node_modules")
-
-  const getReadmeFromChildren = parentDir => children => {
+  const getPackagesFromChildren = parentDir => children => {
     const readmes = children.map(async child => {
       const childDir = `${parentDir}/${child.name}`
-      const files = await readdir(childDir, { withFileTypes: true })
-      const hasReadme = checkForReadme(files)
-      const hasPackageInfo = checkForPackageInfo(files)
-      const readmeContent = hasReadme
-        ? await readFile(`${childDir}/README.md`, "utf8")
-        : null
-
-      const packageInfo = hasPackageInfo
-        ? await readFile(`${childDir}/package.json`, "utf8")
-        : null
-
-      return hasReadme
+      const { readmeContent, packageInfo } = await getDirectoryContent(childDir)
+      return readmeContent || packageInfo
         ? {
             name: child.name,
             path: `${childDir}/README.md`,
@@ -48,28 +59,16 @@ exports.getPackage = path => async (req, res) => {
     return Promise.all(readmes)
   }
 
-  const files = await readdir(dir, { withFileTypes: true })
-
   try {
-    const hasReadme = checkForReadme(files)
-    const hasPackageInfo = checkForPackageInfo(files)
-
-    const readmeContents = hasReadme
-      ? await readFile(`${dir}/README.md`, "utf8")
-      : null
-
-    const packageInfo = hasPackageInfo
-      ? await readFile(`${dir}/package.json`, "utf8")
-      : null
-
+    const { files, readmeContent, packageInfo } = await getDirectoryContent(dir)
     const children = await pipe(
       getDirectories,
-      getReadmeFromChildren(dir)
+      getPackagesFromChildren(dir)
     )(files)
 
     const pkg = {
       path: dir,
-      content: readmeContents,
+      content: readmeContent,
       info: packageInfo,
       children: children
     }

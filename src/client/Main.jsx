@@ -125,7 +125,7 @@ const Main = ({ pkg }) => {
               </ul>
             </div>
           )}
-          <Markdown source={source} />
+          {source && <Markdown source={source} />}
         </div>
       </div>
     </div>
