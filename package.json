@@ -1,6 +1,6 @@
 {
   "name": "module-docs",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "description": "browse the README files of dependencies in your application's node_modules directory using your browser",
   "main": "src/index.js",
   "bin": {
