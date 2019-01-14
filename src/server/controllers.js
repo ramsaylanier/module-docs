@@ -5,6 +5,10 @@ const promisify = require("util").promisify
 const readdir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
 
+const blacklist = [".bin", ".cache", ".yarn-integrity"]
+
+const filterThroughBlacklist = files =>
+  files.filter(f => !blacklist.includes(f))
 const checkFilesForFile = files => fileName =>
   some(files, f => f.name === fileName)
 const getDirectories = files =>
@@ -35,7 +39,8 @@ const getDirectoryContent = async directory => {
 
 exports.getFiles = (path, config) => async (req, res) => {
   const files = await readdir(path)
-  res.send({ files, config })
+  const filteredFiles = filterThroughBlacklist(files)
+  res.send({ files: filteredFiles, config })
 }
 
 exports.getPackage = path => async (req, res) => {
