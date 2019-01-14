@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/styles"
 import styled from "@emotion/styled"
 import { withRouter, Link } from "react-router-dom"
-import { getModules, getReadme } from "./util.js"
+import { getModules, getPackage } from "./util.js"
 import qs from "query-string"
 
 import Autosuggest from "react-autosuggest"
@@ -102,7 +102,7 @@ const App = props => {
   const [suggestions, setSuggestions] = useState([])
   const [modules, setModules] = useState([])
   const [module, setModule] = useState(null)
-  const [readme, setReadme] = useState("")
+  const [pkg, setPkg] = useState("")
   const [favorites, setFavorites] = useState([])
   const classes = useStyles()
 
@@ -153,8 +153,8 @@ const App = props => {
 
   const loadReadme = async () => {
     try {
-      const readme = await getReadme(module)
-      setReadme(readme)
+      const pkg = await getPackage(module)
+      setPkg(pkg)
     } catch (err) {
       console.log(err)
     }
@@ -227,7 +227,7 @@ const App = props => {
             </nav>
           )}
         </Sidebar>
-        {readme && <Main readme={readme} />}
+        {pkg && <Main pkg={pkg} />}
       </Body>
     </div>
   )
