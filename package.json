@@ -1,6 +1,6 @@
 {
   "name": "module-docs",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "description": "browse the README files of dependencies in your application's node_modules directory using your browser",
   "main": "src/index.js",
   "bin": {
@@ -30,6 +30,7 @@
     "commander": "^2.19.0",
     "concurrently": "^4.1.0",
     "express": "^4.16.4",
+    "idb-keyval": "^3.1.0",
     "normalize.css": "^8.0.1",
     "prismjs": "^1.15.0",
     "query-string": "^6.2.0",

@@ -4,14 +4,6 @@ import { makeStyles } from "@material-ui/styles"
 import Prism from "prismjs"
 
 import Markdown from "react-markdown"
-import htmlParser from "react-markdown/plugins/html-parser"
-
-const parseHtml = htmlParser({
-  isValidNode: node => node.type !== "script",
-  processingInstructions: [
-    /* ... */
-  ]
-})
 
 const useStyles = makeStyles({
   root: {
@@ -56,12 +48,13 @@ const useStyles = makeStyles({
     color: "white",
     height: "100%",
     overflow: "auto",
-    padding: "1rem",
+    maxWidth: 250,
     "& ul": {
       padding: 0,
       margin: 0
     },
     "& li": {
+      padding: ".5rem 1rem",
       listStyle: "none"
     }
   },
@@ -96,24 +89,28 @@ const Main = ({ pkg }) => {
     setInfo(JSON.parse(child.info))
   }
 
+  console.log(pkg)
+
   return (
     <div className={classes.root}>
-      <div className={classes.sidebar}>
-        <ul>
-          {pkg.children.map(
-            child =>
-              child.name && (
-                <li
-                  key={child.name}
-                  className={classes.child}
-                  onClick={() => handleClick(child)}
-                >
-                  {child.name}
-                </li>
-              )
-          )}
-        </ul>
-      </div>
+      {pkg.children && (
+        <div className={classes.sidebar}>
+          <ul>
+            {pkg.children.map(
+              child =>
+                child.name && (
+                  <li
+                    key={child.name}
+                    className={classes.child}
+                    onClick={() => handleClick(child)}
+                  >
+                    {child.name}
+                  </li>
+                )
+            )}
+          </ul>
+        </div>
+      )}
       <div className={classes.wrapper}>
         <div className={classes.source}>
           {info && (
