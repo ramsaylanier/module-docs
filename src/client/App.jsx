@@ -94,6 +94,13 @@ const Sidebar = styled("div")({
   "& p, & a": {
     color: accent,
     margin: 0
+  },
+  "& ul": {
+    padding: 0,
+    margin: 0
+  },
+  "& li": {
+    listStyle: "none"
   }
 })
 

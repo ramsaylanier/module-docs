@@ -42,7 +42,7 @@ exports.getPackage = path => async (req, res) => {
             content: readmeContent,
             info: packageInfo
           }
-        : null
+        : {}
     })
 
     return Promise.all(readmes)

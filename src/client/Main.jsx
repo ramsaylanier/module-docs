@@ -52,6 +52,9 @@ const useStyles = makeStyles({
     "& ul": {
       padding: 0,
       margin: 0
+    },
+    "& li": {
+      listStyle: "none"
     }
   },
   child: {
@@ -64,7 +67,6 @@ const useStyles = makeStyles({
 })
 
 const Main = ({ pkg }) => {
-  console.log(pkg)
   const [source, setSource] = useState(pkg.content)
   const [info, setInfo] = useState(JSON.parse(pkg.info))
   const classes = useStyles()
