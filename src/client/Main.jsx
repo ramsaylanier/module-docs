@@ -85,11 +85,10 @@ const Main = ({ pkg }) => {
   )
 
   const handleClick = child => {
+    console.log(child.content)
     setSource(child.content)
     setInfo(JSON.parse(child.info))
   }
-
-  console.log(pkg)
 
   return (
     <div className={classes.root}>
