@@ -20,7 +20,6 @@ module.exports = (modulePath, config) => {
   )
 
   app.post("/modules", FileController.getFiles(modulePath, config))
-
   app.post("/module/:name", FileController.getPackage(modulePath))
 
   app.get("*", function response(req, res) {
