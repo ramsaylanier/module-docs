@@ -4,9 +4,13 @@ const path = require("path")
 
 const getConfig = () => {
   const configPath = path.join(process.cwd(), "./module-docs.config.js")
-  const config = require(configPath)
-  if (!config) return null
-  return config
+  try {
+    const config = require(configPath)
+    if (!config) return null
+    return config
+  } catch (_) {
+    return null
+  }
 }
 
 program.command("start").action(() => {

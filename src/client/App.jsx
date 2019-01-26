@@ -189,8 +189,10 @@ const App = props => {
 
   const loadApp = async () => {
     const { files: modules, config } = await getModules()
-    const favorites = await loadFavoritesIntoMemory(config.favorites)
-    setFavorites(Array.from(favorites))
+    if (config) {
+      const favorites = await loadFavoritesIntoMemory(config.favorites)
+      setFavorites(Array.from(favorites))
+    }
     setModules(modules)
     loadModule()
   }
