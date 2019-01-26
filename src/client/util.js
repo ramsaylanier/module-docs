@@ -24,7 +24,10 @@ export const getPackage = async module => {
   }
 }
 
-const getFavs = () => get("favorites") || new Set([])
+const getFavs = async () => {
+  const favs = await get("favorites")
+  return favs || new Set([])
+}
 
 export const addToFavorites = async module => {
   const favs = await getFavs()
@@ -42,7 +45,7 @@ export const removeFromFavorites = async module => {
 
 export const loadFavoritesIntoMemory = async favorites => {
   const favs = await getFavs()
-  favorites.forEach(fav => favs.add(fav))
+  if (favorites && favorites.length) favorites.forEach(fav => favs.add(fav))
   set("favorites", favs)
   return favs
 }
