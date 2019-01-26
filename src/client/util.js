@@ -24,7 +24,10 @@ export const getPackage = async module => {
   }
 }
 
-const getFavs = () => get("favorites") || new Set([])
+const getFavs = async () => {
+  const favs = await get("favorites")
+  return favs || new Set([])
+}
 
 export const addToFavorites = async module => {
   const favs = await getFavs()
