@@ -45,7 +45,7 @@ export const removeFromFavorites = async module => {
 
 export const loadFavoritesIntoMemory = async favorites => {
   const favs = await getFavs()
-  favorites.forEach(fav => favs.add(fav))
+  if (favorites && favorites.length) favorites.forEach(fav => favs.add(fav))
   set("favorites", favs)
   return favs
 }
