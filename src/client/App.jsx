@@ -2,22 +2,13 @@ import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/styles"
 import styled from "@emotion/styled"
-import { withRouter, Link } from "react-router-dom"
-import {
-  getModules,
-  getPackage,
-  loadFavoritesIntoMemory,
-  addToFavorites,
-  removeFromFavorites
-} from "./util.js"
+import { withRouter } from "react-router-dom"
+import { getModules, getPackage, addToFavorites } from "./util.js"
 import qs from "query-string"
-import sortBy from "lodash/sortBy"
 
 import Autosuggest from "react-autosuggest"
+import Sidebar from "./components/sidebar"
 import Main from "./Main"
-
-const dark = "#380436"
-const accent = "#a4f87f"
 
 const useStyles = makeStyles({
   container: {
@@ -30,14 +21,14 @@ const useStyles = makeStyles({
     borderWidth: "0 0 1px 0",
     borderColor: "currentColor",
     borderStyle: "solid",
-    color: accent,
+    color: "var(--accent-color)",
     padding: ".5rem"
   },
   suggestionsContainer: {
     maxHeight: 300,
     width: "100%",
     overflow: "auto",
-    background: dark
+    background: "var(--dark-color)"
   },
   suggestionsContainerOpen: {
     position: "absolute",
@@ -49,7 +40,7 @@ const useStyles = makeStyles({
     padding: ".5rem 0",
     cursor: "pointer",
     "&:not(:last-of-type)": {
-      borderBottom: `1px solid ${accent}`
+      borderBottom: "1px solid var(--accent-color)"
     }
   },
   suggestionsList: {
@@ -69,8 +60,8 @@ const useStyles = makeStyles({
 
 const Header = styled("header")({
   alignItems: "center",
-  background: dark,
-  color: accent,
+  background: "var(--dark-color)",
+  color: "var(--accent-color)",
   display: "flex",
   justifyContent: "center",
   padding: "1rem",
@@ -94,27 +85,15 @@ const Wrapper = styled("div")({
 const FavoriteButton = styled("button")({
   appearance: "none",
   background: "transparent",
-  border: `1px solid ${accent}`,
+  border: "1px solid var(--accent-color)",
   borderRadius: 3,
   color: "white",
   cursor: "pointer",
   marginLeft: "1rem",
   padding: ".5rem 1rem",
   "&:hover": {
-    background: accent,
-    color: dark
-  }
-})
-
-const DeleteButton = styled("button")({
-  background: "transparent",
-  border: "none",
-  color: "white",
-  cursor: "pointer",
-  "& svg": {
-    height: 16,
-    width: 16,
-    fill: "white"
+    background: "var(--accent-color)",
+    color: "var(--dark-color)"
   }
 })
 
@@ -123,38 +102,13 @@ const Body = styled("div")({
   height: "100vh"
 })
 
-const Sidebar = styled("div")({
-  padding: "6rem 1rem 1rem 1rem",
-  background: dark,
-  color: accent,
-  maxWidth: 250,
-  "& p, & a": {
-    color: accent,
-    margin: 0
-  },
-  "& ul": {
-    padding: 0,
-    margin: 0
-  },
-  "& li": {
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "space-between",
-    listStyle: "none",
-    padding: ".25rem 0",
-    "&:not(:last-of-type)": {
-      borderBottom: `1px solid #9d0098`
-    }
-  }
-})
-
 const App = props => {
   const [val, setVal] = useState("")
+  const [config, setConfig] = useState(null)
   const [suggestions, setSuggestions] = useState([])
   const [modules, setModules] = useState([])
   const [module, setModule] = useState(null)
   const [pkg, setPkg] = useState("")
-  const [favorites, setFavorites] = useState([])
   const classes = useStyles()
 
   useEffect(() => {
@@ -189,11 +143,9 @@ const App = props => {
 
   const loadApp = async () => {
     const { files: modules, config } = await getModules()
-    const favorites = await loadFavoritesIntoMemory(
-      (config && config.favorites) || []
-    )
-    setFavorites(Array.from(favorites))
+
     setModules(modules)
+    setConfig(config)
     loadModule()
   }
 
@@ -220,13 +172,7 @@ const App = props => {
   }
 
   const handleClick = async e => {
-    const favs = await addToFavorites(module)
-    setFavorites(Array.from(favs))
-  }
-
-  const handleRemove = async fav => {
-    const favs = await removeFromFavorites(fav)
-    setFavorites(Array.from(favs))
+    addToFavorites(module)
   }
 
   const getSuggestions = value => {
@@ -276,28 +222,7 @@ const App = props => {
         </Wrapper>
       </Header>
       <Body>
-        <Sidebar>
-          {favorites && (
-            <nav>
-              <p>Favorites:</p>
-              <ul>
-                {sortBy(favorites).map(f => (
-                  <li key={f}>
-                    <Link to={{ pathname: "/", search: `?search=${f}` }}>
-                      {f}
-                    </Link>
-                    <DeleteButton onClick={() => handleRemove(f)}>
-                      <svg width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                        <path d="M0 0h24v24H0z" fill="none" />
-                      </svg>
-                    </DeleteButton>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-        </Sidebar>
+        <Sidebar config={config} />
         {pkg && <Main pkg={pkg} />}
       </Body>
     </div>

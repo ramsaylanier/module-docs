@@ -1,3 +1,4 @@
+const path = require("path")
 const express = require("express")
 const webpack = require("webpack")
 const config = require("../webpack.config")
@@ -5,11 +6,11 @@ const devMiddleware = require("webpack-dev-middleware")
 const compiler = webpack(config)
 const bodyParser = require("body-parser")
 const FileController = require("./controllers")
-
 const PORT = 4444
 
 module.exports = (modulePath, config) => {
   const app = express()
+  const packageInfoPath = path.join(modulePath, "../package.json")
 
   app.use(bodyParser.json())
   app.use(
@@ -19,6 +20,7 @@ module.exports = (modulePath, config) => {
     })
   )
 
+  app.post("/package-info", FileController.getPackageInfo(packageInfoPath))
   app.post("/modules", FileController.getFiles(modulePath, config))
   app.post("/module/:name", FileController.getPackage(modulePath))
 
