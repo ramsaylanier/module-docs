@@ -24,6 +24,18 @@ export const getPackage = async module => {
   }
 }
 
+export const getRootPackageFile = async module => {
+  try {
+    const response = await fetch(`http://localhost:4444/package-info`, {
+      method: "POST"
+    })
+    const { packageInfo } = await response.json()
+    return JSON.parse(packageInfo)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const getFavs = async () => {
   const favs = await get("favorites")
   return favs || new Set([])

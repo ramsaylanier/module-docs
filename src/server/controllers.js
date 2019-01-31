@@ -37,6 +37,11 @@ const getDirectoryContent = async directory => {
   }
 }
 
+exports.getPackageInfo = path => async (req, res) => {
+  const packageInfo = await readFile(path, "utf8")
+  res.send({ packageInfo })
+}
+
 exports.getFiles = (path, config) => async (req, res) => {
   const files = await readdir(path)
   const filteredFiles = filterThroughBlacklist(files)

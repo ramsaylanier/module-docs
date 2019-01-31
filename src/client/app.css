@@ -1,3 +1,9 @@
+:root{
+  --accent-color: #bbdb91;
+  --secondary-color: #5a0058;
+  --dark-color: #380436;
+}
+
 body{
   font-family: 'Roboto', sans-serif;
 }
