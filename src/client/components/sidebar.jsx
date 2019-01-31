@@ -11,7 +11,8 @@ const Sidebar = styled("div")({
   padding: "4rem 1rem 1rem 1rem",
   background: "var(--dark-color)",
   color: "var(--accent-color)",
-  maxWidth: 250
+  maxWidth: 250,
+  overflowY: "auto"
 })
 
 const AppSidebar = ({ config }) => {
