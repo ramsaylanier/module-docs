@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import styled from "@emotion/styled"
+import qs from "query-string"
 
 import { Link } from "react-router-dom"
 
@@ -30,10 +31,22 @@ const DeleteButton = styled("button")({
   }
 })
 
+const generateUrlSearchParamsString = item => {
+  const arr = item.split("/")
+  const obj = {
+    search: arr[0]
+  }
+  obj.sub = arr[1] || ""
+
+  return qs.stringify(obj)
+}
+
 const SidebarItem = ({ item, allowDelete, handleDelete }) => {
   return (
     <ListItem>
-      <Link to={{ pathname: "/", search: `?search=${item}` }}>{item}</Link>
+      <Link to={{ pathname: "/", search: generateUrlSearchParamsString(item) }}>
+        {item}
+      </Link>
 
       {allowDelete && (
         <DeleteButton onClick={() => handleDelete(item)}>
@@ -49,7 +62,8 @@ const SidebarItem = ({ item, allowDelete, handleDelete }) => {
 
 SidebarItem.propTypes = {
   item: PropTypes.string.isRequired,
-  allowDelete: PropTypes.bool
+  allowDelete: PropTypes.bool,
+  handleDelete: PropTypes.func
 }
 
 export default SidebarItem

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/styles"
+import { Link, withRouter } from "react-router-dom"
 import Prism from "prismjs"
+import qs from "query-string"
 
 import Markdown from "react-markdown"
 
@@ -56,6 +58,9 @@ const useStyles = makeStyles({
     "& li": {
       padding: ".5rem 1rem",
       listStyle: "none"
+    },
+    "& a": {
+      color: "white"
     }
   },
   child: {
@@ -67,7 +72,7 @@ const useStyles = makeStyles({
   }
 })
 
-const Main = ({ pkg }) => {
+const Main = ({ pkg, location }) => {
   const [source, setSource] = useState(pkg.content)
   const [info, setInfo] = useState(JSON.parse(pkg.info))
   const classes = useStyles()
@@ -78,16 +83,24 @@ const Main = ({ pkg }) => {
 
   useEffect(
     () => {
-      setSource(pkg.content)
+      const { sub } = qs.parse(location.search)
+      if (sub) {
+        const child = pkg.children.find(child => child.name === sub)
+        if (child) {
+          setSource(child.content)
+        }
+      } else {
+        setSource(pkg.content)
+      }
       setInfo(JSON.parse(pkg.info))
     },
-    [pkg]
+    [pkg, location]
   )
 
-  const handleClick = child => {
-    console.log(child.content)
-    setSource(child.content)
-    setInfo(JSON.parse(child.info))
+  const generateSearchParams = child => {
+    const search = qs.parse(location.search)
+    search.sub = child.name
+    return qs.stringify(search)
   }
 
   return (
@@ -98,12 +111,15 @@ const Main = ({ pkg }) => {
             {pkg.children.map(
               child =>
                 child.name && (
-                  <li
-                    key={child.name}
-                    className={classes.child}
-                    onClick={() => handleClick(child)}
-                  >
-                    {child.name}
+                  <li key={child.name} className={classes.child}>
+                    <Link
+                      to={{
+                        pathname: "/",
+                        search: generateSearchParams(child)
+                      }}
+                    >
+                      {child.name}
+                    </Link>
                   </li>
                 )
             )}
@@ -137,7 +153,8 @@ const Main = ({ pkg }) => {
 }
 
 Main.propTypes = {
-  pkg: PropTypes.object.isRequired
+  pkg: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 }
 
-export default Main
+export default withRouter(Main)

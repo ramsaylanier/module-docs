@@ -129,7 +129,7 @@ const App = props => {
   useEffect(
     () => {
       const { search } = qs.parse(props.location.search)
-      search && setVal(search)
+      if (search.sub) search && setVal(search)
     },
     [props.location.search]
   )
